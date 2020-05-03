@@ -1,5 +1,7 @@
 package com.mattjohnson.teai2.shop;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -14,6 +16,7 @@ public class ShopServiceMain {
     private final double MAX_PRICE = 300.00;
     private static final Random random = new Random();
 
+    Logger logger = LoggerFactory.getLogger(ShopServiceMain.class);
 
     private final Shop shop;
 
@@ -24,8 +27,10 @@ public class ShopServiceMain {
 
     @EventListener(ApplicationReadyEvent.class)
     public void run() {
+        logger.info("shop is running...");
         addProducts(shop);
         shop.checkoutBasket();
+
     }
 
     private void addProducts(Shop shop) {

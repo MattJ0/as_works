@@ -1,7 +1,7 @@
 package com.mattjohnson.teai2.shop;
 
 import com.mattjohnson.teai2.product.Product;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -10,10 +10,11 @@ import java.util.List;
 
 @Component
 @Profile("Plus")
-@ConfigurationProperties(prefix = "plus")
 class ShopPlus implements Shop {
 
     private List<Product> basket;
+
+    @Value("${plus.tax}")
     private double tax;
 
     public ShopPlus() {
