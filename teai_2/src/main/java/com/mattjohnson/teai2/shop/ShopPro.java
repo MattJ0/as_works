@@ -1,5 +1,6 @@
-package com.mattjohnson.teai2;
+package com.mattjohnson.teai2.shop;
 
+import com.mattjohnson.teai2.product.Product;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,7 @@ import java.util.List;
 @Component
 @Profile("Pro")
 @ConfigurationProperties(prefix = "pro")
-public class ShopPro implements Shop {
+class ShopPro implements Shop {
 
     private List<Product> basket;
     private double tax;
@@ -29,7 +30,7 @@ public class ShopPro implements Shop {
 
     @Override
     public void checkoutBasket() {
-        System.out.println("Shop Plus (price + tax " + df2.format(tax) +"% - discount " + df2.format(discount) +"%)");
+        System.out.println("Shop Pro (price + tax " + df2.format(tax) +"% - discount " + df2.format(discount) +"%)");
         for (Product product:basket) {
             System.out.println(product.getName() + " " + df2.format(product.getPrice() + calculateTax(product) - calculateDiscount(product)) +
                     " (base price: " + df2.format(product.getPrice()) +

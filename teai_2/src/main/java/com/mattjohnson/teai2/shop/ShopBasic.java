@@ -1,6 +1,7 @@
-package com.mattjohnson.teai2;
+package com.mattjohnson.teai2.shop;
 
 
+import com.mattjohnson.teai2.product.Product;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Component
 @Profile("Basic")
-public class ShopBasic implements Shop {
+class ShopBasic implements Shop {
 
     private List<Product> basket;
 

@@ -1,4 +1,4 @@
-package com.mattjohnson.teai2;
+package com.mattjohnson.teai2.product;
 
 
 public class Product {
