@@ -24,13 +24,13 @@ class ShopStart {
     private Logger logger = LoggerFactory.getLogger(ShopStart.class);
 
     private ProductService productService;
-    private List<Product> cart;
+    private List<Product> cart = new ArrayList<>();
 
     @Autowired
     public ShopStart(ProductService productService) {
         this.productService = productService;
-        this.cart = new ArrayList<>();
     }
+
 
 
     @EventListener(ApplicationReadyEvent.class)
@@ -40,8 +40,7 @@ class ShopStart {
     }
     public void checkoutCart() {
         logger.info("ShopStart");
-        logger.info("Cart contain: " + cart.toString());
-        logger.info("Total price: " + totalPrice().toString());
+        logger.info("Total price: " + getTotalPrice().toString());
     }
 
     public void addGeneratedProducts(List<Product> products) {
@@ -53,7 +52,7 @@ class ShopStart {
         cart.add(new Product(name, price));
     }
 
-    public BigDecimal totalPrice() {
+    public BigDecimal getTotalPrice() {
         BigDecimal result = cart.stream().map(Product::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
         return result.setScale(2, RoundingMode.HALF_UP);
     }
