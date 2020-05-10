@@ -12,7 +12,7 @@ import java.util.Optional;
 
 
 @Service
-public class CarServiceImpl implements CarService{
+public class CarServiceImpl implements CarService {
 
     private List<Car> carList;
 
@@ -23,15 +23,18 @@ public class CarServiceImpl implements CarService{
 
     @EventListener(ApplicationReadyEvent.class)
     public void addCars() {
-        carList.add(new Car(1L, "Pontiac", "Firebird", Color.BLACK));
-        carList.add(new Car(2L, "DeLorean", "DMC-12", Color.SILVER));
-        carList.add(new Car(3L, "Fiat", "125p", Color.RED));
+        carList.add(new Car(1, "Pontiac", "Firebird", Color.black));
+        carList.add(new Car(2, "DeLorean", "DMC-12", Color.black));
+        carList.add(new Car(3, "Fiat", "125p", Color.red));
     }
 
 
     @Override
-    public List<Car> findAll() {
-        return carList;
+    public Optional<List<Car>> findAll() {
+        if (carList.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(carList);
     }
 
     @Override
@@ -41,14 +44,17 @@ public class CarServiceImpl implements CarService{
     }
 
     @Override
-    public List<Car> findByColor(String color) {
+    public Optional<List<Car>> findByColor(String color) {
         List<Car> carsByColor = new ArrayList<>();
         carList.forEach(car -> {
-            if(car.getColor().toString().equalsIgnoreCase(color)) {
+            if (car.getColor().toString().equalsIgnoreCase(color)) {
                 carsByColor.add(car);
             }
         });
-        return carsByColor;
+        if (carsByColor.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(carsByColor);
     }
 
     @Override
@@ -67,18 +73,36 @@ public class CarServiceImpl implements CarService{
         return false;
     }
 
-//    @Override
-//    public boolean modifyCarAttribute(Car car) {
-//
-//    }
+    @Override
+    public boolean modifyCarAttribute(long id, Car patch) {
+        Optional<Car> first = findById(id);
+        if (first.isPresent()) {
+            Car car = first.get();
+            if (patch.getColor() != null) {
+                car.setColor(patch.getColor());
+            }
+            if (patch.getMark() != null) {
+                car.setMark(patch.getMark());
+            }
+            if (patch.getModel() != null) {
+                car.setModel(patch.getModel());
+            }
+
+
+            return true;
+        }
+        return false;
+    }
 
     @Override
-    public Optional<Car> removeCar(Long id) {
-       Optional<Car> first = findById(id);
+    public Optional<Car> removeCar(long id) {
+        Optional<Car> first = findById(id);
         if (first.isPresent()) {
             carList.remove(first.get());
             return first;
         }
         return first;
     }
+
+
 }

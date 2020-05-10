@@ -2,22 +2,27 @@ Zadanie podstawowe:
 Napisz REST API dla listy pojazdów. Pojazd będzie miał pola: id, mark, model, color.
 API które będzie obsługiwało metody webowe:
 
-do pobierania wszystkich pozycji
-do pobierania elementu po jego id
-do pobierania elementów w określonym kolorze (query)
-do dodawania pozycji
-do modyfikowania pozycji
-do modyfikowania jednego z pól pozycji
-do usuwania jeden pozycji
-Przy starcie aplikacji mają dodawać się 3 pozycje.
+X do pobierania wszystkich pozycji
+X do pobierania elementu po jego id
+X do pobierania elementów w określonym kolorze (query)
+X do dodawania pozycji
+X do modyfikowania pozycji
+X do modyfikowania jednego z pól pozycji
+X do usuwania jeden pozycji
+X Przy starcie aplikacji mają dodawać się 3 pozycje.
 
 —————————
 
 Dla ambitnych:
 
-rozbuduj aplikacje o możliwość zwracania danych w postaci XML
-dodaj obsługę Swgger UI
-zaimplementuj HATEOAS
+X rozbuduj aplikacje o możliwość zwracania danych w postaci XML
+X dodaj obsługę Swgger UI
+X zaimplementuj HATEOAS (zaimplementowane do metod GetMapping)
 
-+ walidacja danych dostarczanych do api
-+ autoinkrementacja id
+----------
+
+Dodatkowe do zrobienia:
+
+walidacja danych dostarczanych do api (cześciowo OK) - do poprawienia walidacja pod kątem PATCH
+autoinkrementacja id (do późniejszej implementacji), z zachowaniem bazowego id w PUT i PATCH
+
