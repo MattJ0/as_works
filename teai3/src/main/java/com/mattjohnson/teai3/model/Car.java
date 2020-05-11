@@ -6,7 +6,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class Car extends RepresentationModel {
+public class Car extends RepresentationModel<Car> {
 
     @NotNull
     @Min(1)
@@ -35,6 +35,7 @@ public class Car extends RepresentationModel {
     public long getId() {
         return id;
     }
+
 
     public String getMark() {
         return mark;

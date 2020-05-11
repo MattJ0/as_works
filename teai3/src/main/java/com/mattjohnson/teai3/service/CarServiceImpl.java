@@ -14,8 +14,7 @@ import java.util.Optional;
 @Service
 public class CarServiceImpl implements CarService {
 
-    private List<Car> carList;
-
+    private final List<Car> carList;
 
     public CarServiceImpl() {
         this.carList = new ArrayList<>();
@@ -23,11 +22,13 @@ public class CarServiceImpl implements CarService {
 
     @EventListener(ApplicationReadyEvent.class)
     public void addCars() {
-        carList.add(new Car(1, "Pontiac", "Firebird", Color.black));
-        carList.add(new Car(2, "DeLorean", "DMC-12", Color.black));
-        carList.add(new Car(3, "Fiat", "125p", Color.red));
-    }
+        carList.add(new Car(1L, "Pontiac", "Firebird", Color.black));
+        carList.add(new Car(2L, "DeLorean", "DMC-12", Color.black));
+        carList.add(new Car(3L, "Fiat", "125p", Color.red));
+        carList.add(new Car(4L, "Toyota", "Yaris", Color.silver));
+        carList.add(new Car(5L, "Opel", "Astra", Color.blue));
 
+    }
 
     @Override
     public Optional<List<Car>> findAll() {
@@ -59,18 +60,24 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public boolean addCar(Car car) {
-        return carList.add(car);
-    }
-
-    @Override
-    public boolean modifyCar(Car newCar) {
-        Optional<Car> first = carList.stream().filter(car -> car.getId() == newCar.getId()).findFirst();
-        if (first.isPresent()) {
-            carList.remove(first.get());
-            carList.add(newCar);
+        Optional<Car> first = findById(car.getId());
+        if(!first.isPresent()) {
+            carList.add(car);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean updateCar(Car newCar) {
+        Optional<Car> first = findById(newCar.getId());
+        if (first.isPresent()) {
+            Car car = first.get();
+            car.setMark(newCar.getMark());
+            car.setModel(newCar.getModel());
+            car.setColor(newCar.getColor());
+            return true;
+        } else return false;
     }
 
     @Override
@@ -103,6 +110,5 @@ public class CarServiceImpl implements CarService {
         }
         return first;
     }
-
 
 }

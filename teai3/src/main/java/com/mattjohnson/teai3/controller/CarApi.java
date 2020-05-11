@@ -68,7 +68,7 @@ public class CarApi {
             List<EntityModel<Car>> cars = list.get().stream()
                     .map(car -> new EntityModel<>(car,
                             linkTo(methodOn(CarApi.class).getCarById(car.getId())).withSelfRel(),
-                            linkTo(methodOn(CarApi.class).getCarByColor(color)).withRel(color + "cars")))
+                            linkTo(methodOn(CarApi.class).getCarByColor(color)).withRel(color + "_cars")))
                     .collect(Collectors.toList());
 
             return ResponseEntity.ok(
@@ -82,17 +82,16 @@ public class CarApi {
     public ResponseEntity addCar(@Validated @RequestBody Car car) {
         boolean add = carService.addCar(car);
         if (add) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(car, HttpStatus.CREATED);
+        } else return new ResponseEntity<>("element with that id is already exists", HttpStatus.BAD_REQUEST);
     }
 
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity modifyCar(@Validated @RequestBody Car newCar) {
-        boolean modify = carService.modifyCar(newCar);
+    @PutMapping("/update")
+    public ResponseEntity updateCar(@Validated @RequestBody Car newCar) {
+        boolean modify = carService.updateCar(newCar);
         if (modify) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(newCar, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -108,13 +107,12 @@ public class CarApi {
 
     }
 
+    //for unknown reasons, the method incorrectly deletes the first item from the list of cars
+    //the DELETE response from the API returns the correct element indicated by PathVariable
     @DeleteMapping("/remove/{id}")
     public ResponseEntity removeCar(@PathVariable long id) {
-        Optional<Car> first = carService.findById(id);
-        if (first.isPresent()) {
-            return new ResponseEntity<>(carService.removeCar(id), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Optional<Car> delete =  carService.removeCar(id);
+        return delete.map(car -> new ResponseEntity(car, HttpStatus.OK)).orElseGet(() -> new ResponseEntity(HttpStatus.NOT_FOUND));
     }
 
 
