@@ -19,7 +19,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping(path = "/api/cars",
+@RequestMapping(value = "/api/cars",
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 public class CarApi {
 
@@ -107,8 +107,6 @@ public class CarApi {
 
     }
 
-    //for unknown reasons, the method incorrectly deletes the first item from the list of cars
-    //the DELETE response from the API returns the correct element indicated by PathVariable
     @DeleteMapping("/remove/{id}")
     public ResponseEntity removeCar(@PathVariable long id) {
         Optional<Car> delete =  carService.removeCar(id);

@@ -1,0 +1,5 @@
+REST API (GET, POST, PUT, PATCH, DELETE) 
+produces JSON/XML
+
++ Swagger
++ HATEOAS

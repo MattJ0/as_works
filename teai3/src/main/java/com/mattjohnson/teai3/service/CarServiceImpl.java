@@ -6,48 +6,51 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
 public class CarServiceImpl implements CarService {
 
-    private final List<Car> carList;
+    public static long countID = 1;
+
+    private final Map<Long, Car> carMap;
 
     public CarServiceImpl() {
-        this.carList = new ArrayList<>();
+        this.carMap = new HashMap<>();
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void addCars() {
-        carList.add(new Car(1L, "Pontiac", "Firebird", Color.black));
-        carList.add(new Car(2L, "DeLorean", "DMC-12", Color.black));
-        carList.add(new Car(3L, "Fiat", "125p", Color.red));
-        carList.add(new Car(4L, "Toyota", "Yaris", Color.silver));
-        carList.add(new Car(5L, "Opel", "Astra", Color.blue));
+        carMap.put(countID, new Car("Pontiac", "Firebird", Color.black));
+        carMap.put(countID, new Car("DeLorean", "DMC-12", Color.black));
+        carMap.put(countID, new Car("Fiat", "125p", Color.red));
+        carMap.put(countID, new Car("Toyota", "Yaris", Color.silver));
+        carMap.put(countID, new Car("Opel", "Astra", Color.blue));
+
 
     }
 
     @Override
     public Optional<List<Car>> findAll() {
-        if (carList.isEmpty()) {
+        if (carMap.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(carList);
+        List<Car> allCars = new ArrayList<>();
+        carMap.forEach((aLong, car) -> allCars.add(car));
+        return Optional.of(allCars);
     }
 
     @Override
     public Optional<Car> findById(long id) {
-        return carList.stream().filter(car -> car.getId() == id).findFirst();
+        return Optional.ofNullable(carMap.get(id));
 
     }
 
     @Override
     public Optional<List<Car>> findByColor(String color) {
         List<Car> carsByColor = new ArrayList<>();
-        carList.forEach(car -> {
+        carMap.forEach((aLong, car) -> {
             if (car.getColor().toString().equalsIgnoreCase(color)) {
                 carsByColor.add(car);
             }
@@ -62,7 +65,7 @@ public class CarServiceImpl implements CarService {
     public boolean addCar(Car car) {
         Optional<Car> first = findById(car.getId());
         if(!first.isPresent()) {
-            carList.add(car);
+            carMap.put(countID, car);
             return true;
         }
         return false;
@@ -105,7 +108,7 @@ public class CarServiceImpl implements CarService {
     public Optional<Car> removeCar(long id) {
         Optional<Car> first = findById(id);
         if (first.isPresent()) {
-            carList.remove(first.get());
+            carMap.remove(id);
             return first;
         }
         return first;

@@ -23,6 +23,6 @@ X zaimplementuj HATEOAS (zaimplementowane do metod GetMapping)
 
 Dodatkowe do zrobienia:
 
-walidacja danych dostarczanych do api (cześciowo OK) - do poprawienia walidacja pod kątem PATCH
-autoinkrementacja id (do późniejszej implementacji), z zachowaniem bazowego id w PUT i PATCH
+X walidacja danych dostarczanych do api
+X prosta autoinkrementacja id
 
