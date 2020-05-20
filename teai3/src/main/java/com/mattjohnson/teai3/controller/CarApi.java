@@ -19,6 +19,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping(value = "/api/cars",
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 public class CarApi {
@@ -30,25 +31,30 @@ public class CarApi {
         this.carService = carService;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<CollectionModel<EntityModel<Car>>> getCars() {
-        Optional<List<Car>> list = carService.findAll();
-        if (list.isPresent()) {
-            List<EntityModel<Car>> cars = list.get().stream()
-                    .map(car -> new EntityModel<>(car,
-                            linkTo(methodOn(CarApi.class).getCarById(car.getId())).withSelfRel(),
-                            linkTo(methodOn(CarApi.class).getCars()).withRel("cars")))
-                    .collect(Collectors.toList());
+//    @GetMapping("/all")
+//    public ResponseEntity<CollectionModel<EntityModel<Car>>> getCars() {
+//        Optional<List<Car>> list = carService.findAll();
+//        if (!list.get().isEmpty()) {
+//            List<EntityModel<Car>> cars = list.get().stream()
+//                    .map(car -> new EntityModel<>(car,
+//                            linkTo(methodOn(CarApi.class).getCarById(car.getId())).withSelfRel(),
+//                            linkTo(methodOn(CarApi.class).getCars()).withRel("cars")))
+//                    .collect(Collectors.toList());
+//
+//            return ResponseEntity.ok(
+//                    new CollectionModel<>(cars,
+//                            linkTo(methodOn(CarApi.class).getCars()).withSelfRel()));
+//        }
+//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//    }
 
-            return ResponseEntity.ok(
-                    new CollectionModel<>(cars,
-                            linkTo(methodOn(CarApi.class).getCars()).withSelfRel()));
-        }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @GetMapping("/all")
+    public List<Car> getCars() {
+        return carService.findAll().get();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<EntityModel<Car>> getCarById(@PathVariable long id) {
+    @GetMapping("/id")
+    public ResponseEntity<EntityModel<Car>> getCarById(@Validated @RequestBody long id) {
         Optional<Car> first = carService.findById(id);
         if (first.isPresent()) {
             return first
@@ -61,8 +67,8 @@ public class CarApi {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/color/{color}")
-    public ResponseEntity<CollectionModel<EntityModel<Car>>> getCarByColor(@PathVariable String color) {
+    @GetMapping("/color")
+    public ResponseEntity<CollectionModel<EntityModel<Car>>> getCarByColor(@Validated @RequestBody String color) {
         Optional<List<Car>> list = carService.findByColor(color);
         if (list.isPresent()) {
             List<EntityModel<Car>> cars = list.get().stream()
@@ -96,9 +102,8 @@ public class CarApi {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PatchMapping("/modify/{id}")
-    public ResponseEntity modifyAttribute(@PathVariable long id,
-                                          @RequestBody Car patch) {
+    @PatchMapping("/modify")
+    public ResponseEntity modifyAttribute(@RequestBody long id, Car patch) {
         boolean modify = carService.modifyCarAttribute(id, patch);
         if (modify) {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -107,9 +112,9 @@ public class CarApi {
 
     }
 
-    @DeleteMapping("/remove/{id}")
-    public ResponseEntity removeCar(@PathVariable long id) {
-        Optional<Car> delete =  carService.removeCar(id);
+    @DeleteMapping("/remove")
+    public ResponseEntity removeCar(@RequestBody long id) {
+        Optional<Car> delete = carService.removeCar(id);
         return delete.map(car -> new ResponseEntity(car, HttpStatus.OK)).orElseGet(() -> new ResponseEntity(HttpStatus.NOT_FOUND));
     }
 

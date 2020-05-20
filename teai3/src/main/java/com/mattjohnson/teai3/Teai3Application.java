@@ -12,6 +12,4 @@ public class Teai3Application {
         SpringApplication.run(Teai3Application.class, args);
     }
 
-
-
 }

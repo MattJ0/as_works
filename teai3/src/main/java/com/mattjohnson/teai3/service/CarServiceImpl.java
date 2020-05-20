@@ -1,6 +1,7 @@
 package com.mattjohnson.teai3.service;
 
 import com.mattjohnson.teai3.model.Car;
+
 import com.mattjohnson.teai3.model.Color;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -28,14 +29,10 @@ public class CarServiceImpl implements CarService {
         carMap.put(countID, new Car("Toyota", "Yaris", Color.silver));
         carMap.put(countID, new Car("Opel", "Astra", Color.blue));
 
-
     }
 
     @Override
     public Optional<List<Car>> findAll() {
-        if (carMap.isEmpty()) {
-            return Optional.empty();
-        }
         List<Car> allCars = new ArrayList<>();
         carMap.forEach((aLong, car) -> allCars.add(car));
         return Optional.of(allCars);
